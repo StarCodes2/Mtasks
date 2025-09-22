@@ -4,7 +4,9 @@
   "description": "MTask API is a RESTful backend service for a task manager application.",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/server.js",
+    "lint": "eslint .",
+    "test": "jest --forceExit --detectOpenHandles --verbose --testPathPatterns=tests/integration"
   },
   "directories": {
     "test": "tests"
@@ -19,6 +21,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
+    "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1"
   },
