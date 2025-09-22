@@ -1,4 +1,4 @@
-const asyncHandler = require('../middlewares/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
 const { ApiError } = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const userService = require('../services/user.service');
