@@ -6,12 +6,9 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-  security_scanning:
+  auto_review:
     enabled: true
-    scan_dependencies: true
-    scan_secrets: true
-    vulnerability_alerts: true
-    sast_enabled: true
+    drafts: false
   ai_suggestions:
     enabled: true
     features:
