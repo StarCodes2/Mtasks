@@ -2,7 +2,7 @@ const authService = require('../services/auth.service');
 const httpStatus = require('http-status');
 
 const { ApiError } = require('../utils/ApiError');
-const asyncHandler = require('../middlewares/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;

@@ -1,67 +1,104 @@
-# MTask API
+# MTasks API
 
-MTask API is a RESTful backend service for a task manager application. It handles user registration, authentication, and task management features like create, read, update, delete (CRUD). Built with Node.js, Express, and MongoDB, it serves as the backend for a productivity app that can later support web, mobile, and CLI clients.
+**MTasks API** is a robust and secure backend service designed to manage user authentication, task lists, and individual tasks. Built with **Node.js**, **Express.js**, and **MongoDB (Mongoose)**, it provides a RESTful interface for a multi-user task management application. This API enforces strict authentication and authorization rules, ensuring users can only access and manage their own resources.
 
-## Core Features:
-- User authentication (JWT)
-- Task CRUD (create, update, delete, get)
-- Ownership-based access control (each user can only manage their tasks)
-- Validation and error handling
-- Secure password storage
-- Modular, testable codebase
+## 🚀 Features
+
+- **User Authentication**: Secure registration and login with JWTs.
+- **Task List Management**: Create, retrieve, update, and delete task lists.
+- **Task Management**: Comprehensive CRUD operations for tasks within specific lists.
+- **Ownership Enforcement**: Strict authorization ensuring users only interact with their own data.
+- **Data Validation**: Robust input validation to maintain data integrity.
+- **Secure Passwords**: Industry-standard bcrypt hashing for password storage.
+- **Centralized Error Handling**: Consistent API responses for errors.
+- **Modular Design**: Clean architecture for scalability and maintainability.
 
 ## 🛠️ Tech Stack
 
-### Core
-- **Language**: JavaScript (Node.js)
-- **Framework**: Express.js
-- **Database**: MongoDB (via Mongoose)
-- **Auth**: JWT, bcrypt
-- **Validation**: express-validator or zod
-- **Environment Config**: dotenv
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (Mongoose ODM)
+- **Authentication**: JWT, bcrypt
+- **Validation**: `express-validator` (or `zod`)
+- **Testing**: Jest, Supertest
+- **Environment**: `dotenv`
+- **Development**: `nodemon`
 
-### Dev & Tooling
-- **Testing**: Jest + Supertest
-- **Linting & Formatting**: ESLint + Prettier
-- **Live Reload**: nodemon
-- **Dev Scripts**: concurrently (if needed for testing services in parallel)
-- **API Testing**: Postman or Insomnia
+## 📂 Project Structure
 
-### Deployment Targets
-- Railway, Render, Fly.io, or DigitalOcean App Platform
-- MongoDB Atlas for production DB
+The project follows a modular structure to separate concerns and enhance maintainability:
 
-## Core Entities
-
-### User:
-Registers, logs in, owns lists.
-
-### List:
-Created by a user, contains tasks.
-
-### Task:
-Belongs to a list, has status, due date, etc.
-
-## 🧱 Updated API Folder Structure
 ```
 mtasks-api/
-│
 ├── /src
-│   ├── /config              # Environment and MongoDB config
-│   ├── /models              # Mongoose schemas: User, List, Task
-│   ├── /routes              # API route definitions
-│   ├── /controllers         # Route logic (auth, lists, tasks)
-│   ├── /services            # Business logic and data access
-│   ├── /middlewares         # Auth, error, validation
-│   ├── /utils               # Token helpers, logger, constants
-│   └── server.js            # Main Express app bootstrap
-│
-├── /tests                   # Unit and integration test suites
-├── .env
-├── .gitignore
-├── package.json
-└── README.md
+│   ├── /config              # Configuration files (e.g., MongoDB, environment variables)
+│   ├── /models              # Mongoose schemas for User, List, and Task
+│   ├── /routes              # Express route definitions for API endpoints
+│   ├── /controllers         # Business logic and request handling for routes
+│   ├── /services            # Service layer for data access and complex logic
+│   ├── /middlewares         # Express middleware (e.g., authentication, error handling)
+│   ├── /utils               # Utility functions (e.g., JWT helpers, loggers)
+│   └── server.js            # Main Express application entry point
+├── /tests                   # Unit and integration tests
+├── .env                     # Environment variables
+├── .gitignore               # Git ignore file
+├── package.json             # Project dependencies and scripts
+└── README.md                # Project documentation
 ```
+
+## ⚙️ Setup and Installation
+
+To get the MTasks API up and running on your local machine, follow these steps:
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository_url>
+cd mtasks-api
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or yarn install
+```
+
+### 3. Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+```
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=1h
+```
+
+- `PORT`: The port on which the server will run (e.g., `5000`).
+- `MONGODB_URI`: Your MongoDB connection string. For local development, this might be `mongodb://localhost:27017/mtasks`. For production, use a MongoDB Atlas URI.
+- `JWT_SECRET`: A strong, random string used to sign JWTs. Generate a complex one.
+- `JWT_EXPIRES_IN`: The expiration time for JWTs (e.g., `1h`, `7d`).
+
+### 4. Run the Application
+
+To start the development server with `nodemon`:
+
+```bash
+npm run dev
+```
+
+To start the application in production mode:
+
+```bash
+npm start
+```
+
+The API will be running at `http://localhost:PORT` (e.g., `http://localhost:5000`).
+
+## 📝 API Documentation
+
+Detailed API endpoint documentation, including request/response formats and examples, will be generated using OpenAPI (Swagger/Postman Documentation).
+
 
 ## 📦 Data Models
 
@@ -129,25 +166,25 @@ mtasks-api/
 - Never expose password or internal IDs in responses
 - Remove user-related private fields from JSON responses
 
-## 📌 MVP API Endpoints
+## 📝 API Endpoints
 
-### 🔐 Auth
-- `POST /api/auth/register` → create user
-- `POST /api/auth/login` → return JWT
+#### Authentication
+- `POST /api/auth/register`: Register a new user.
+- `POST /api/auth/login`: Log in a user and receive a JWT.
 
-### 🗂️ Lists
-- `GET /api/lists`
-- `POST /api/lists`
-- `GET /api/lists/:id`
-- `PUT /api/lists/:id`
-- `DELETE /api/lists/:id`
+#### Task Lists
+- `GET /api/lists`: Get all task lists for the authenticated user.
+- `POST /api/lists`: Create a new task list.
+- `GET /api/lists/:id`: Get a specific task list by ID.
+- `PUT /api/lists/:id`: Update a specific task list by ID.
+- `DELETE /api/lists/:id`: Delete a specific task list by ID.
 
-### ✅ Tasks (Nested under List)
-- `GET /api/lists/:listId/tasks`
-- `POST /api/lists/:listId/tasks`
-- `GET /api/lists/:listId/tasks/:taskId`
-- `PUT /api/lists/:listId/tasks/:taskId`
-- `DELETE /api/lists/:listId/tasks/:taskId`
+#### Tasks
+- `GET /api/lists/:listId/tasks`: Get all tasks for a specific task list.
+- `POST /api/lists/:listId/tasks`: Create a new task within a specific task list.
+- `GET /api/lists/:listId/tasks/:taskId`: Get a specific task by ID within a task list.
+- `PUT /api/lists/:listId/tasks/:taskId`: Update a specific task by ID within a task list.
+- `DELETE /api/lists/:listId/tasks/:taskId`: Delete a specific task by ID within a task list.
 
 ## 🧠 AI Integration Strategy (API-Only)
 
