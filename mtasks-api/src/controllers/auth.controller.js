@@ -1,92 +1,37 @@
-const { validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
-const User = require('../models/User');
+const authService = require('../services/auth.service');
+const httpStatus = require('http-status');
 
-exports.register = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const { ApiError } = require('../utils/ApiError');
+const asyncHandler = require('../middlewares/asyncHandler');
 
+exports.register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-
-  try {
-    let user = await User.findOne({ email });
-
-    if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
-    }
-
-    user = new User({
-      name,
-      email,
-      password
-    });
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
-    await user.save();
-
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      config.jwtSecret,
-      { expiresIn: '1h' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  const user = await authService.registerUser(name, email, password);
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User registration failed');
   }
-};
+  const token = await authService.generateAuthToken(user._id);
+  user.id = user._id;
+  delete user._id;
+  res.status(httpStatus.CREATED).send({ user, token });
+});
 
-exports.login = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
+exports.login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
-  try {
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: 'Invalid Credentials' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid Credentials' });
-    }
-
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      config.jwtSecret,
-      { expiresIn: '1h' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  const user = await authService.authUser(email, password);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Incorrect email or password');
   }
-};
+  const token = await authService.generateAuthToken(user._id);
+  user.id = user._id;
+  delete user._id;
+  res.status(httpStatus.OK).send({ user, token });
+});
+
+exports.getAuthenticatedUser = asyncHandler(async (req, res, next) => {
+  const user = await authService.getUserById(req.user.id);
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+  res.json(user);
+});

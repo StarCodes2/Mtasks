@@ -1,0 +1,102 @@
+language: en
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "mtasks-api/src/controllers/**/*.js"
+      instructions: |
+        When reviewing controllers, pay attention to:
+        - Input validation and sanitization
+        - Proper error handling and status codes
+        - Authentication and authorization checks (e.g., req.user.id)
+        - Adherence to business logic and separation of concerns
+        - Use of async/await and try/catch blocks
+        - Avoiding direct database operations; delegate to services
+
+    - path: "mtasks-api/src/models/**/*.js"
+      instructions: |
+        When reviewing Mongoose models, check for:
+        - Correct schema definition and data types
+        - Proper relationships between models (e.g., ref: 'User', 'List')
+        - Data integrity and validation rules at the schema level
+        - Indexing for performance
+        - Virtuals and methods for derived data or custom logic
+        - Timestamps (createdAt, updatedAt) are enabled
+
+    - path: "mtasks-api/src/routes/**/*.js"
+      instructions: |
+        When reviewing API routes, ensure:
+        - Adherence to RESTful principles and naming conventions
+        - Proper application of authentication middleware (`auth.middleware.js`)
+        - Input validation middleware is correctly applied
+        - Clear route definitions and HTTP methods
+        - Modular structure and separation of concerns
+        - JSDoc comments for route documentation
+
+    - path: "mtasks-api/src/middlewares/**/*.js"
+      instructions: |
+        When reviewing middleware, focus on:
+        - Security aspects (JWT verification, role-based access control)
+        - Proper error handling and propagation
+        - Efficient request/response modification
+        - Avoiding blocking operations
+        - Clear purpose and single responsibility
+
+    - path: "mtasks-api/src/services/**/*.js"
+      instructions: |
+        When reviewing services, check for:
+        - Encapsulation of business logic
+        - Reusability and modularity
+        - Interaction with the database (Mongoose queries)
+        - Error handling specific to data access
+        - Complex data transformations or calculations
+
+    - path: "mtasks-api/src/config/**/*.js"
+      instructions: |
+        When reviewing configuration files, ensure:
+        - Use of environment variables for sensitive data (e.g., JWT_SECRET, MONGO_URI)
+        - No hardcoded secrets or credentials
+        - Clear and organized configuration settings
+        - Proper default values where applicable
+
+    - path: "mtasks-api/src/server.js"
+      instructions: |
+        When reviewing the main server file, verify:
+        - Correct application bootstrapping and Express setup
+        - Proper middleware integration (cors, express.json)
+        - All routes are correctly mounted
+        - Centralized error handling is configured
+        - Database connection is established and robust
+        - Server starts on the configured port
+
+  severity:
+    critical:
+      - security_vulnerabilities
+      - memory_leaks
+      - authentication_bypass
+      - data_exposure
+    high:
+      - performance_issues
+      - security_misconfiguration
+      - insecure_dependencies
+    medium:
+      - code_style_violations
+      - accessibility_issues
+      - type_safety_concerns
+    low:
+      - documentation_missing
+      - code_duplication
+      - naming_conventions
+
+  code_metrics:
+    enabled: true
+    analyze:
+      - cyclomatic_complexity
+      - cognitive_complexity
+      - maintainability_index
+      - code_duplication
+      - test_coverage
