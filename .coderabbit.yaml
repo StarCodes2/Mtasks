@@ -1,11 +1,8 @@
 language: en
 
-reviews:
-  profile: "chill"
-  request_changes_workflow: true
-  auto_review:
-    enabled: true
-    drafts: false
+profile: "chill"
+request_changes_workflow: true
+auto_review:
   security_scanning:
     enabled: true
     scan_dependencies: true
@@ -87,27 +84,27 @@ reviews:
         - Database connection is established and robust
         - Server starts on the configured port
 
-  severity:
-    critical:
-      - security_vulnerabilities
-      - memory_leaks
-      - authentication_bypass
-      - data_exposure
-    high:
-      - performance_issues
-      - security_misconfiguration
-      - insecure_dependencies
-    medium:
-      - code_style_violations
-      - accessibility_issues
-      - type_safety_concerns
-    low:
-      - documentation_missing
-      - code_duplication
-      - naming_conventions
+severity:
+  critical:
+    - security_vulnerabilities
+    - memory_leaks
+    - authentication_bypass
+    - data_exposure
+  high:
+    - performance_issues
+    - security_misconfiguration
+    - insecure_dependencies
+  medium:
+    - code_style_violations
+    - accessibility_issues
+    - type_safety_concerns
+  low:
+    - documentation_missing
+    - code_duplication
+    - naming_conventions
 
-  code_metrics:
-    enabled: true
+code_metrics:
+  enabled: true
     analyze:
       - cyclomatic_complexity
       - cognitive_complexity
