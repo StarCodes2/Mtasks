@@ -9,14 +9,6 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-  ai_suggestions:
-    enabled: true
-    features:
-      - code_optimization
-      - security_best_practices
-      - performance_improvements
-      - accessibility_enhancements
-      - test_coverage
   path_instructions:
     - path: "mtasks-api/src/controllers/**/*.js"
       instructions: |
