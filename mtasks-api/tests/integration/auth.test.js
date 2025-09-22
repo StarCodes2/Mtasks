@@ -1,9 +1,9 @@
+process.env.NODE_ENV = 'test';
 const request = require('supertest');
-const { app, server } = require('../../src/server'); // Adjust path to your Express app
+const { app, server } = require('../../src/server');
 const mongoose = require('mongoose');
-const User = require('../../../src/models/user.model');
+const User = require('../../src/models/User');
 const config = require('../../src/config/config');
-
 describe('Auth Endpoints', () => {
   beforeAll(async () => {
     // Connect to a test database
