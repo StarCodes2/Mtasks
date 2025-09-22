@@ -27,6 +27,10 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 
+const User = require('../models/User');
+const httpStatus = require('http-status');
+const ApiError = require('../utils/ApiError');
+
 const updateUserById = async (userId, updateBody) => {
   const user = await getUserById(userId);
   if (!user) {
@@ -42,7 +46,7 @@ const deleteUserById = async (userId) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await user.remove();
+  await user.deleteOne();
   return user;
 };
 
